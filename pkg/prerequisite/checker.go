@@ -51,8 +51,8 @@ type CheckResult struct {
 type Checker struct {
 	checkers     []CheckerInterface
 	runtime      string
-	checkCluster bool
 	checkDocker  bool
+	checkCluster bool
 	checkKnative bool
 }
 
