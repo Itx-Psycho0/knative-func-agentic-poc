@@ -1,0 +1,55 @@
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+bin/
+dist/
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.html
+coverage.out
+
+# Dependency directories
+vendor/
+
+# Go workspace file
+go.work
+
+# IDE specific files
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# OS specific files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+tmp/
+temp/
+
+# Build artifacts
+*.log
+
+# Personal notes and planning documents (not for public repo)
+*_NOTES.md
+*_PLAN.md
+ACCOMPLISHMENTS.md
+FILES_CREATED.md
+GETTING_STARTED.md
+IMPLEMENTATION_PLAN.md
+LFX_PROPOSAL_ANALYSIS.md
+MAINTAINER_ALIGNMENT.md
+MAINTAINER_INSIGHTS.md
+PROJECT_SUMMARY.md
+QUICK_START_GUIDE.md
+SETUP_CHECKLIST.md
+UPDATED_IMPLEMENTATION_PLAN.md

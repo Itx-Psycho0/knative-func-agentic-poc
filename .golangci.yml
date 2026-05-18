@@ -1,0 +1,87 @@
+# golangci-lint configuration for Knative Functions Agentic Workflow POC
+
+run:
+  timeout: 5m
+  tests: true
+  modules-download-mode: readonly
+
+linters:
+  enable:
+    - errcheck      # Check for unchecked errors
+    - gosimple      # Simplify code
+    - govet         # Vet examines Go source code
+    - ineffassign   # Detect ineffectual assignments
+    - staticcheck   # Static analysis
+    - unused        # Check for unused code
+    - gofmt         # Check formatting
+    - goimports     # Check imports
+    - misspell      # Check for misspelled words
+    - gocritic      # Opinionated Go linter
+    - revive        # Fast, configurable, extensible linter
+    - gosec         # Security checker
+    - bodyclose     # Check HTTP response body is closed
+    - noctx         # Check for sending HTTP request without context
+    - errorlint     # Error wrapping checker
+    - exportloopref # Check for pointers to loop variables
+    - gocyclo       # Cyclomatic complexity
+    - dupl          # Code clone detection
+    - prealloc      # Find slice declarations that could be preallocated
+
+linters-settings:
+  errcheck:
+    check-type-assertions: true
+    check-blank: true
+
+  govet:
+    check-shadowing: true
+    enable-all: true
+
+  gocyclo:
+    min-complexity: 15
+
+  dupl:
+    threshold: 100
+
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - experimental
+      - opinionated
+      - performance
+      - style
+
+  revive:
+    rules:
+      - name: exported
+        severity: warning
+        disabled: false
+      - name: package-comments
+        severity: warning
+        disabled: false
+
+  gosec:
+    excludes:
+      - G104 # Audit errors not checked (covered by errcheck)
+
+issues:
+  exclude-rules:
+    # Exclude some linters from running on tests files
+    - path: _test\.go
+      linters:
+        - gocyclo
+        - errcheck
+        - dupl
+        - gosec
+
+    # Exclude known issues
+    - text: "weak cryptographic primitive"
+      linters:
+        - gosec
+
+  max-issues-per-linter: 0
+  max-same-issues: 0
+
+output:
+  format: colored-line-number
+  print-issued-lines: true
+  print-linter-name: true
