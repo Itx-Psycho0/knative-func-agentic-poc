@@ -41,62 +41,62 @@ const (
 // CheckResult represents the result of a prerequisite check
 type CheckResult struct {
 	Name        string
-	Passed      bool
 	Message     string
 	Suggestions []string
 	Severity    Severity
+	Passed      bool
 }
 
-// Checker interface defines a prerequisite checker
-type Checker interface {
+// Checker orchestrates multiple prerequisite checks
+type Checker struct {
+	checkers     []CheckerInterface
+	runtime      string
+	checkCluster bool
+	checkDocker  bool
+	checkKnative bool
+}
+
+// CheckerInterface defines a prerequisite checker
+type CheckerInterface interface {
 	Check(ctx context.Context) (*CheckResult, error)
 	Name() string
 	Description() string
 }
 
-// PrerequisiteChecker orchestrates multiple prerequisite checks
-type PrerequisiteChecker struct {
-	runtime      string
-	checkCluster bool
-	checkDocker  bool
-	checkKnative bool
-	checkers     []Checker
-}
-
-// Option is a functional option for PrerequisiteChecker
-type Option func(*PrerequisiteChecker)
+// Option is a functional option for configuring the Checker
+type Option func(*Checker)
 
 // WithRuntime sets the target runtime
 func WithRuntime(runtime string) Option {
-	return func(c *PrerequisiteChecker) {
+	return func(c *Checker) {
 		c.runtime = runtime
 	}
 }
 
 // WithClusterCheck enables cluster checking
 func WithClusterCheck(enabled bool) Option {
-	return func(c *PrerequisiteChecker) {
+	return func(c *Checker) {
 		c.checkCluster = enabled
 	}
 }
 
 // WithDockerCheck enables Docker checking
 func WithDockerCheck(enabled bool) Option {
-	return func(c *PrerequisiteChecker) {
+	return func(c *Checker) {
 		c.checkDocker = enabled
 	}
 }
 
 // WithKnativeCheck enables Knative checking
 func WithKnativeCheck(enabled bool) Option {
-	return func(c *PrerequisiteChecker) {
+	return func(c *Checker) {
 		c.checkKnative = enabled
 	}
 }
 
-// NewChecker creates a new PrerequisiteChecker
-func NewChecker(opts ...Option) *PrerequisiteChecker {
-	c := &PrerequisiteChecker{
+// NewChecker creates a new Checker
+func NewChecker(opts ...Option) *Checker {
+	c := &Checker{
 		checkCluster: true,
 		checkDocker:  true,
 		checkKnative: false,
@@ -110,8 +110,8 @@ func NewChecker(opts ...Option) *PrerequisiteChecker {
 	return c
 }
 
-func (c *PrerequisiteChecker) initializeCheckers() {
-	c.checkers = []Checker{}
+func (c *Checker) initializeCheckers() {
+	c.checkers = []CheckerInterface{}
 
 	// Add Docker checker
 	if c.checkDocker {
@@ -130,7 +130,7 @@ func (c *PrerequisiteChecker) initializeCheckers() {
 }
 
 // CheckAll runs all configured prerequisite checks
-func (c *PrerequisiteChecker) CheckAll(ctx context.Context) ([]*CheckResult, error) {
+func (c *Checker) CheckAll(ctx context.Context) ([]*CheckResult, error) {
 	results := make([]*CheckResult, 0, len(c.checkers))
 
 	for _, checker := range c.checkers {

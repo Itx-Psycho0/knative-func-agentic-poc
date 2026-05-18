@@ -22,10 +22,11 @@ linters:
     - bodyclose     # Check HTTP response body is closed
     - noctx         # Check for sending HTTP request without context
     - errorlint     # Error wrapping checker
-    - exportloopref # Check for pointers to loop variables
     - gocyclo       # Cyclomatic complexity
-    - dupl          # Code clone detection
     - prealloc      # Find slice declarations that could be preallocated
+  disable:
+    - dupl          # Disabled: Similar code patterns are acceptable for POC
+    - exportloopref # Deprecated in Go 1.22+
 
 linters-settings:
   errcheck:
